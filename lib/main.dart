@@ -17,48 +17,19 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Horario Universitario',
+      title: 'SIGUL',
       theme: ThemeData(
+        primarySwatch: Colors.blue,
         useMaterial3: true,
-        colorScheme: ColorScheme(
-          brightness: Brightness.light,
-          primary: AppColors.primary,
-          onPrimary: Colors.white,
-          secondary: AppColors.accent,
-          onSecondary: Colors.white,
-          error: Colors.red,
-          onError: Colors.white,
-          surface: AppColors.background,
-          onSurface: AppColors.textPrimary,
-        ),
-        scaffoldBackgroundColor: AppColors.background,
-        appBarTheme: const AppBarTheme(
-          backgroundColor: AppColors.primary,
-          foregroundColor: Colors.white,
-          elevation: 0,
-        ),
+        fontFamily: 'Roboto',
         textTheme: const TextTheme(
-          bodyLarge: TextStyle(color: AppColors.textPrimary),
-          bodyMedium: TextStyle(color: AppColors.textSecondary),
-          titleLarge: TextStyle(
-            color: AppColors.textPrimary,
-            fontWeight: FontWeight.bold,
-          ),
+          titleLarge: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+          titleMedium: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          bodyLarge: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
         ),
-        floatingActionButtonTheme: const FloatingActionButtonThemeData(
-          backgroundColor: AppColors.accent,
-          foregroundColor: Colors.white,
-        ),
-        dividerColor: AppColors.divider,
       ),
       home: Scaffold(
-        appBar: AppBar(
-          title: Text('Sigul App'),
-          backgroundColor: AppColors.primary,
-          foregroundColor: AppColors.textPrimary,
-        ),
-        backgroundColor: AppColors.background,
-        body: HomeScreen(),
+        body: const HomeScreen(),
       ),
     );
   }

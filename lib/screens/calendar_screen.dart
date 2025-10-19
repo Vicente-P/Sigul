@@ -91,8 +91,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
     // Día seleccionado como texto (ej: "Lunes")
     final String selectedDayName = DateFormat(
       'EEEE',
