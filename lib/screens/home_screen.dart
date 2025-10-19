@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sigul/screens/calendar_screen.dart';
+import 'package:sigul/screens/map_screen.dart';
+import 'package:sigul/screens/panorama_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -277,7 +279,13 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
-          _buildDrawerItem(Icons.map, 'Mapa', () => Navigator.pop(context)),
+          _buildDrawerItem(Icons.map, 'Mapa', () {
+            Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const CampusMapScreen()),
+            );
+          }),
           _buildDrawerItem(Icons.calendar_today, 'Horarios', () {
             Navigator.pop(context);
             Navigator.push(
@@ -285,11 +293,13 @@ class _HomeScreenState extends State<HomeScreen> {
               MaterialPageRoute(builder: (context) => const CalendarScreen()),
             );
           }),
-          _buildDrawerItem(
-            Icons.apartment,
-            'Edificios',
-            () => Navigator.pop(context),
-          ),
+          _buildDrawerItem(Icons.apartment, 'Edificios', () {
+            Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const PanoramaScreen()),
+            );
+          }),
           _buildDrawerItem(
             Icons.info,
             'Acerca de',
