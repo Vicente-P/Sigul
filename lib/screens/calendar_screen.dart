@@ -8,15 +8,14 @@ import 'add_schedule_screen.dart';
 
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({super.key});
-
   @override
   State<CalendarScreen> createState() => _CalendarScreenState();
 }
 
 class _CalendarScreenState extends State<CalendarScreen> {
   List<Schedule> schedules = [];
-  late DateTime selectedDate; // Día seleccionado (con fecha)
-  late List<DateTime> weekDates; // Fechas de la semana actual
+  late DateTime selectedDate; 
+  late List<DateTime> weekDates; 
 
   String selectedDay = 'Lunes';
 
