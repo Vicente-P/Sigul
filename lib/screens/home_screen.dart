@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sigul/screens/calendar_screen.dart';
 import 'package:sigul/screens/map_screen.dart';
 import 'package:sigul/screens/panorama_screen.dart';
+import 'package:sigul/screens/ramos_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -291,6 +292,13 @@ class _HomeScreenState extends State<HomeScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const CalendarScreen()),
+            );
+          }),
+          _buildDrawerItem(Icons.book, 'Asignaturas', () {
+            Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const RamosScreen()),
             );
           }),
           _buildDrawerItem(Icons.apartment, 'Edificios', () {
