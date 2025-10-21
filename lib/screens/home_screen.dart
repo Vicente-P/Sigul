@@ -25,7 +25,6 @@ class _HomeScreenState extends State<HomeScreen> {
       drawer: _buildDrawer(),
       body: Column(
         children: [
-          // --- Barra superior ---
           Container(
             width: double.infinity,
             decoration: BoxDecoration(
@@ -39,7 +38,6 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // --- Fila menú + logo ---
                   Padding(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 16,
@@ -84,7 +82,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                   ),
-                  // --- Texto de búsqueda ---
                   const Padding(
                     padding: EdgeInsets.only(left: 16.0, top: 8.0),
                     child: Text(
@@ -97,7 +94,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  // --- Barra de búsqueda ---
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: Container(
@@ -132,14 +128,12 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
 
-          // --- Contenido principal ---
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Botones Mapa y Horarios
                   Row(
                     children: [
                       _buildTabButton('Mapa', isSelected: true),
@@ -157,7 +151,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   const SizedBox(height: 16),
 
-                  // Mapa interactivo
                   GestureDetector(
                     onTap: () => print('Mapa presionado'),
                     child: Container(

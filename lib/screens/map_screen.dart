@@ -25,7 +25,6 @@ class CampusMapScreen extends StatelessWidget {
         children: [
           const SizedBox(height: 12),
 
-          // Indicador de acción
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Align(
@@ -42,7 +41,6 @@ class CampusMapScreen extends StatelessWidget {
 
           const SizedBox(height: 8),
 
-          // Contenedor del mapa con estilo visual
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -71,7 +69,6 @@ class CampusMapScreen extends StatelessWidget {
                     boundaryMargin: const EdgeInsets.all(100),
                     child: Stack(
                       children: [
-                        // Imagen del mapa
                         Positioned.fill(
                           child: Image.asset(
                             'assets/images/plano_universidad.webp',
@@ -79,7 +76,6 @@ class CampusMapScreen extends StatelessWidget {
                           ),
                         ),
 
-                        // Marcadores
                         Positioned(
                           left: 190,
                           top: 280,

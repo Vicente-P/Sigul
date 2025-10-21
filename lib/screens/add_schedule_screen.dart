@@ -26,7 +26,6 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
   @override
   void initState() {
     super.initState();
-    // 👇 Si se pasa un día inicial, úsalo. Si no, "Lunes" por defecto.
     day = widget.initialDay ?? 'Lunes';
   }
 
@@ -98,7 +97,6 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
           key: _formKey,
           child: ListView(
             children: [
-              // 🔹 Asignatura
               TextFormField(
                 decoration: const InputDecoration(
                   labelText: 'Asignatura',
@@ -109,7 +107,6 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
               ),
               const SizedBox(height: 12),
 
-              // 🔹 Profesor
               TextFormField(
                 decoration: const InputDecoration(
                   labelText: 'Profesor',
@@ -119,7 +116,6 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
               ),
               const SizedBox(height: 12),
 
-              // 🔹 Aula
               TextFormField(
                 decoration: const InputDecoration(
                   labelText: 'Aula',
@@ -129,7 +125,6 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
               ),
               const SizedBox(height: 12),
 
-              // 🔹 Día
               DropdownButtonFormField<String>(
                 value: day,
                 decoration: const InputDecoration(
@@ -143,7 +138,6 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
               ),
               const SizedBox(height: 12),
 
-              // 🔹 Horarios (con TimePicker)
               Row(
                 children: [
                   Expanded(
@@ -174,7 +168,6 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
               ),
               const SizedBox(height: 12),
 
-              // 🔹 Repetición
               DropdownButtonFormField<String>(
                 value: repetition,
                 decoration: const InputDecoration(
@@ -188,7 +181,6 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
               ),
               const SizedBox(height: 12),
 
-              // 🔹 Nota adicional
               TextFormField(
                 decoration: const InputDecoration(
                   labelText: 'Nota adicional',
@@ -198,7 +190,6 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
               ),
               const SizedBox(height: 24),
 
-              // 🔹 Botón Guardar
               ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,

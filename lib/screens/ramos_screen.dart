@@ -203,7 +203,6 @@ class _RamosScreenState extends State<RamosScreen> {
       ),
     );
 
-    // Si hubo cambios, actualizar la vista
     if (result == true) {
       setState(() {});
     }

@@ -15,8 +15,8 @@ class CalendarScreen extends StatefulWidget {
 
 class _CalendarScreenState extends State<CalendarScreen> {
   List<Schedule> schedules = [];
-  late DateTime selectedDate; // Día seleccionado (con fecha)
-  late List<DateTime> weekDates; // Fechas de la semana actual
+  late DateTime selectedDate; 
+  late List<DateTime> weekDates; 
 
   String selectedDay = 'Lunes';
 
@@ -27,16 +27,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
     _loadSchedules();
   }
 
-  // 🔹 Genera los días de la semana actual (lunes a domingo)
   void _generateCurrentWeek() {
     DateTime now = DateTime.now();
-    int currentWeekday = now.weekday; // 1=lunes, 7=domingo
+    int currentWeekday = now.weekday; 
     DateTime monday = now.subtract(Duration(days: currentWeekday - 1));
     weekDates = List.generate(7, (i) => monday.add(Duration(days: i)));
-    selectedDate = now; // Día actual seleccionado por defecto
+    selectedDate = now; 
   }
 
-  // 🔹 Cargar horarios guardados desde SharedPreferences
   Future<void> _loadSchedules() async {
     final prefs = await SharedPreferences.getInstance();
     final String? data = prefs.getString('schedules');
@@ -48,7 +46,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
     }
   }
 
-  // 🔹 Guardar horarios actualizados
   Future<void> _saveSchedules() async {
     final prefs = await SharedPreferences.getInstance();
     final String encoded = jsonEncode(
@@ -57,7 +54,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
     await prefs.setString('schedules', encoded);
   }
 
-  // 🔹 Agregar nuevo horario
   Future<void> _addNewSchedule() async {
     final String selectedDayName = DateFormat('EEEE', 'es_CL')
         .format(selectedDate)
@@ -81,7 +77,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
     }
   }
 
-  // 🔹 Eliminar horario (opcional)
   Future<void> _deleteSchedule(int index) async {
     setState(() {
       schedules.removeAt(index);
@@ -91,12 +86,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Día seleccionado como texto (ej: "Lunes")
     final String selectedDayName = DateFormat(
       'EEEE',
       'es_ES',
     ).format(selectedDate);
-    // Filtrar horarios del día seleccionado
     final filteredSchedules = schedules
         .where((s) => s.day.toLowerCase() == selectedDayName.toLowerCase())
         .toList();
@@ -114,7 +107,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
       body: Column(
         children: [
           const SizedBox(height: 8),
-          // 🔹 Título "Hoy" o fecha actual
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Align(
@@ -133,7 +125,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
           ),
           const SizedBox(height: 8),
 
-          // 🔹 Selector de días con fechas
           SizedBox(
             height: 90,
             child: ListView.builder(
@@ -209,7 +200,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
           const SizedBox(height: 8),
 
-          // 🔹 Lista de clases del día
           Expanded(
             child: filteredSchedules.isEmpty
                 ? const Center(child: Text('No hay clases programadas.'))
@@ -235,12 +225,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           width: double.infinity,
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
-                            color: AppColors.lightPrimary, // Color de fondo
+                            color: AppColors.lightPrimary,
                             borderRadius: BorderRadius.circular(16),
                             border: Border.all(
                               color: Colors.black.withValues(
                                 alpha: 0.4,
-                              ), // 👈 contorno suave
+                              ), 
                               width: 2,
                             ),
                             boxShadow: [

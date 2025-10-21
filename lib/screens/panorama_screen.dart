@@ -53,7 +53,6 @@ class _PanoramaScreenState extends State<PanoramaScreen> {
         children: [
           const SizedBox(height: 12),
 
-          // Indicador de acción
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Align(
@@ -70,7 +69,6 @@ class _PanoramaScreenState extends State<PanoramaScreen> {
 
           const SizedBox(height: 8),
 
-          // Dropdown estilizado con AppColors
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Container(
@@ -126,7 +124,6 @@ class _PanoramaScreenState extends State<PanoramaScreen> {
 
           const SizedBox(height: 16),
 
-          // Título dinámico
           Text(
             _selectedName,
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -137,7 +134,6 @@ class _PanoramaScreenState extends State<PanoramaScreen> {
 
           const SizedBox(height: 12),
 
-          // Imagen panorámica con marco y sombra
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),

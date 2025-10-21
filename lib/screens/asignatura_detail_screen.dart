@@ -275,7 +275,6 @@ class _AsignaturaDetailScreenState extends State<AsignaturaDetailScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Información básica
             _buildSectionHeader('Información Básica', Icons.info_outline),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16),
@@ -301,7 +300,6 @@ class _AsignaturaDetailScreenState extends State<AsignaturaDetailScreen> {
               ),
             ),
 
-            // Información del profesor
             _buildSectionHeader('Información del Profesor', Icons.person),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16),
@@ -340,7 +338,6 @@ class _AsignaturaDetailScreenState extends State<AsignaturaDetailScreen> {
               ),
             ),
 
-            // Información de ayudantes
             _buildSectionHeader('Información de Ayudantes', Icons.group),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16),
