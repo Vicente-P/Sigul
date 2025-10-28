@@ -149,7 +149,7 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
               const SizedBox(height: 12),
 
               DropdownButtonFormField<String>(
-                value: day,
+                initialValue: day,
                 decoration: const InputDecoration(
                   labelText: 'Día',
                   prefixIcon: Icon(Icons.calendar_today),
@@ -192,7 +192,7 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
               const SizedBox(height: 12),
 
               DropdownButtonFormField<String>(
-                value: repetition,
+                initialValue: repetition,
                 decoration: const InputDecoration(
                   labelText: 'Repetición',
                   prefixIcon: Icon(Icons.repeat),

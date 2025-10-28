@@ -48,7 +48,7 @@ class CampusMapScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: AppColors.background,
                     border: Border.all(
                       color: Colors.black.withValues(alpha: 0.2),
                       width: 2,
@@ -84,7 +84,7 @@ class CampusMapScreen extends StatelessWidget {
                             title: 'Edificio C',
                             description:
                                 'Aquí se encuentran las salas de Ingeniería y laboratorios.',
-                            color: Colors.red,
+                            color: AppColors.error,
                           ),
                         ),
                         Positioned(
@@ -136,7 +136,7 @@ class CampusMapScreen extends StatelessWidget {
         showDialog(
           context: context,
           builder: (_) => AlertDialog(
-            backgroundColor: Colors.white,
+            backgroundColor: AppColors.background,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
             ),
@@ -192,10 +192,10 @@ class CampusMapScreen extends StatelessWidget {
       return color.shade700;
     }
     return Color.fromARGB(
-      color.alpha,
-      (color.red * 0.8).round(),
-      (color.green * 0.8).round(),
-      (color.blue * 0.8).round(),
+      (color.a * 255.0).round() & 0xff,
+      (color.r * 255.0 * 0.8).round() & 0xff,
+      (color.g * 255.0 * 0.8).round() & 0xff,
+      (color.b * 255.0 * 0.8).round() & 0xff,
     );
   }
 }

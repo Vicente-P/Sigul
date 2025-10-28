@@ -141,7 +141,7 @@ class _RamosScreenState extends State<RamosScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(mensaje),
-        backgroundColor: Colors.red,
+        backgroundColor: AppColors.error,
       ),
     );
   }
@@ -182,7 +182,7 @@ class _RamosScreenState extends State<RamosScreen> {
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
+                backgroundColor: AppColors.error,
               ),
               child: Text(
                 'Eliminar',
@@ -234,7 +234,7 @@ class _RamosScreenState extends State<RamosScreen> {
                 },
               ),
               ListTile(
-                leading: Icon(Icons.delete, color: Colors.red),
+                leading: Icon(Icons.delete, color: AppColors.error),
                 title: Text('Eliminar asignatura'),
                 onTap: () {
                   Navigator.pop(context);
@@ -341,7 +341,7 @@ class _RamosScreenState extends State<RamosScreen> {
                     value: 'delete',
                     child: Row(
                       children: [
-                        Icon(Icons.delete, color: Colors.red),
+                        Icon(Icons.delete, color: AppColors.error),
                         SizedBox(width: 8),
                         Text('Eliminar'),
                       ],

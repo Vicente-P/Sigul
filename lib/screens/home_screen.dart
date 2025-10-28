@@ -3,6 +3,7 @@ import 'package:sigul/screens/calendar_screen.dart';
 import 'package:sigul/screens/map_screen.dart';
 import 'package:sigul/screens/panorama_screen.dart';
 import 'package:sigul/screens/ramos_screen.dart';
+import '../core/app_colors.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -12,8 +13,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  static const Color customBlue = Color(0xFF1976D2);
-
   final TextEditingController _searchController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -21,14 +20,14 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.background,
       drawer: _buildDrawer(),
       body: Column(
         children: [
           Container(
             width: double.infinity,
             decoration: BoxDecoration(
-              color: customBlue,
+              color: AppColors.darkPrimary,
               borderRadius: const BorderRadius.only(
                 bottomLeft: Radius.circular(20),
                 bottomRight: Radius.circular(20),
@@ -72,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
-                                    color: customBlue,
+                                    color: AppColors.darkPrimary,
                                   ),
                                 ),
                               );
@@ -103,7 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
+                            color: Colors.black.withValues(alpha: 0.1),
                             blurRadius: 4,
                             offset: const Offset(0, 2),
                           ),
@@ -112,7 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: TextField(
                         controller: _searchController,
                         decoration: const InputDecoration(
-                          prefixIcon: Icon(Icons.search, color: Colors.grey),
+                          prefixIcon: Icon(Icons.search, color: AppColors.textSecondary),
                           hintText: 'Search...',
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.symmetric(
@@ -147,18 +146,23 @@ class _HomeScreenState extends State<HomeScreen> {
                     'Mapa',
                     style: Theme.of(
                       context,
-                    ).textTheme.titleLarge?.copyWith(color: Colors.black87),
+                    ).textTheme.titleLarge?.copyWith(color: AppColors.textPrimary),
                   ),
                   const SizedBox(height: 16),
 
                   GestureDetector(
-                    onTap: () => print('Mapa presionado'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const CampusMapScreen()),
+                      );
+                    },
                     child: Container(
                       width: double.infinity,
                       height: 200,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: Colors.grey[300]!),
+                        border: Border.all(color: AppColors.divider),
                       ),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(12),
@@ -167,18 +171,18 @@ class _HomeScreenState extends State<HomeScreen> {
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
                             return Container(
-                              color: customBlue.withOpacity(0.1),
+                              color: AppColors.lightPrimary,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Icon(Icons.map, size: 50, color: customBlue),
+                                  Icon(Icons.map, size: 50, color: AppColors.darkPrimary),
                                   const SizedBox(height: 8),
                                   Text(
                                     'Mapa del Campus',
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
-                                      color: customBlue,
+                                      color: AppColors.darkPrimary,
                                     ),
                                   ),
                                 ],
@@ -198,7 +202,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       'Lugares recurrentes',
                       style: Theme.of(
                         context,
-                      ).textTheme.titleMedium?.copyWith(color: Colors.black87),
+                      ).textTheme.titleMedium?.copyWith(color: AppColors.textPrimary),
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -238,7 +242,7 @@ class _HomeScreenState extends State<HomeScreen> {
         padding: EdgeInsets.zero,
         children: [
           DrawerHeader(
-            decoration: const BoxDecoration(color: customBlue),
+            decoration: BoxDecoration(color: AppColors.darkPrimary),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -313,7 +317,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildDrawerItem(IconData icon, String title, VoidCallback onTap) {
     return ListTile(
-      leading: Icon(icon, color: customBlue),
+      leading: Icon(icon, color: AppColors.darkPrimary),
       title: Text(title, style: const TextStyle(fontSize: 16)),
       onTap: onTap,
     );
@@ -321,18 +325,33 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildTabButton(String text, {bool isSelected = false}) {
     return Expanded(
-      child: Container(
-        height: 40,
-        decoration: BoxDecoration(
-          color: isSelected ? customBlue : Colors.grey[200],
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Center(
-          child: Text(
-            text,
-            style: TextStyle(
-              color: isSelected ? Colors.white : Colors.black,
-              fontWeight: FontWeight.bold,
+      child: GestureDetector(
+        onTap: () {
+          if (text == 'Mapa') {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const CampusMapScreen()),
+            );
+          } else if (text == 'Horarios') {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const CalendarScreen()),
+            );
+          }
+        },
+        child: Container(
+          height: 40,
+          decoration: BoxDecoration(
+            color: isSelected ? AppColors.darkPrimary : AppColors.lightPrimary,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Center(
+            child: Text(
+              text,
+              style: TextStyle(
+                color: isSelected ? Colors.white : AppColors.textPrimary,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ),
@@ -346,15 +365,20 @@ class _HomeScreenState extends State<HomeScreen> {
     String imagePath,
   ) {
     return GestureDetector(
-      onTap: () => print('$title seleccionado'),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const PanoramaScreen()),
+        );
+      },
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: customBlue,
+          color: AppColors.darkPrimary,
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: customBlue.withOpacity(0.3),
+              color: AppColors.darkPrimary.withValues(alpha: 0.3),
               blurRadius: 6,
               offset: const Offset(0, 3),
             ),
@@ -367,7 +391,7 @@ class _HomeScreenState extends State<HomeScreen> {
               width: 140,
               height: 140,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: ClipRRect(
@@ -377,7 +401,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) => Container(
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
+                      color: Colors.white.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: const Icon(

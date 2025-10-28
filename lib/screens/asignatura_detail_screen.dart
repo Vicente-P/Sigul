@@ -133,7 +133,7 @@ class _AsignaturaDetailScreenState extends State<AsignaturaDetailScreen> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text('Este campo es requerido'),
-                      backgroundColor: Colors.red,
+                      backgroundColor: AppColors.error,
                     ),
                   );
                   return;
@@ -143,7 +143,7 @@ class _AsignaturaDetailScreenState extends State<AsignaturaDetailScreen> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text('La sigla debe tener el formato: XXX-000'),
-                      backgroundColor: Colors.red,
+                      backgroundColor: AppColors.error,
                     ),
                   );
                   return;
@@ -153,7 +153,7 @@ class _AsignaturaDetailScreenState extends State<AsignaturaDetailScreen> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text('Ya existe una asignatura con esa sigla'),
-                      backgroundColor: Colors.red,
+                      backgroundColor: AppColors.error,
                     ),
                   );
                   return;

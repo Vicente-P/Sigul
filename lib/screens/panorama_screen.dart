@@ -93,7 +93,7 @@ class _PanoramaScreenState extends State<PanoramaScreen> {
                   value: _selectedImage,
                   isExpanded: true,
                   icon: const Icon(Icons.arrow_drop_down),
-                  dropdownColor: Colors.white,
+                  dropdownColor: AppColors.background,
                   borderRadius: BorderRadius.circular(12),
                   items: locations.map((loc) {
                     return DropdownMenuItem<String>(
@@ -103,7 +103,7 @@ class _PanoramaScreenState extends State<PanoramaScreen> {
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
-                          color: Colors.black87,
+                          color: AppColors.textPrimary,
                         ),
                       ),
                     );
@@ -141,7 +141,7 @@ class _PanoramaScreenState extends State<PanoramaScreen> {
                 borderRadius: BorderRadius.circular(20),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.black,
+                    color: AppColors.textPrimary,
                     border: Border.all(
                       color: Colors.black.withValues(alpha: 0.3),
                       width: 2,

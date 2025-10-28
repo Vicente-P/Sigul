@@ -146,12 +146,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     margin: const EdgeInsets.symmetric(horizontal: 6),
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     decoration: BoxDecoration(
-                      color: isSelected ? AppColors.primary : Colors.white,
+                      color: isSelected ? AppColors.primary : AppColors.background,
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(
                         color: isToday
                             ? AppColors.accent
-                            : Colors.grey.shade400,
+                            : AppColors.divider,
                         width: isToday ? 2 : 1,
                       ),
                       boxShadow: [
@@ -172,7 +172,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           DateFormat('E', 'es_CL').format(date), // Thu, Fri...
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: isSelected ? Colors.white : Colors.black87,
+                            color: isSelected ? Colors.white : AppColors.textPrimary,
                           ),
                         ),
                         Text(
@@ -180,14 +180,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
-                            color: isSelected ? Colors.white : Colors.black,
+                            color: isSelected ? Colors.white : AppColors.textPrimary,
                           ),
                         ),
                         Text(
                           DateFormat('MMM', 'es_CL').format(date),
                           style: TextStyle(
                             fontSize: 12,
-                            color: isSelected ? Colors.white : Colors.black54,
+                            color: isSelected ? Colors.white : AppColors.textSecondary,
                           ),
                         ),
                       ],
@@ -213,7 +213,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         background: Container(
                           alignment: Alignment.centerRight,
                           padding: const EdgeInsets.only(right: 20),
-                          color: Colors.red,
+                          color: AppColors.error,
                           child: const Icon(Icons.delete, color: Colors.white),
                         ),
                         onDismissed: (_) => _deleteSchedule(index),
@@ -250,7 +250,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                 children: [
                                   const Icon(
                                     Icons.access_time,
-                                    color: Colors.black,
+                                    color: AppColors.textPrimary,
                                   ),
                                   const SizedBox(width: 8),
                                   Text(
@@ -258,7 +258,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                     style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16,
-                                      color: Colors.black,
+                                      color: AppColors.textPrimary,
                                     ),
                                   ),
                                 ],
@@ -268,7 +268,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                 children: [
                                   const Icon(
                                     Icons.menu_book,
-                                    color: Colors.black,
+                                    color: AppColors.textPrimary,
                                   ),
                                   const SizedBox(width: 8),
                                   Expanded(
@@ -277,7 +277,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                       style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w600,
-                                        color: Colors.black,
+                                        color: AppColors.textPrimary,
                                       ),
                                     ),
                                   ),
@@ -286,13 +286,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
                               const SizedBox(height: 6),
                               Row(
                                 children: [
-                                  const Icon(Icons.person, color: Colors.black),
+                                  const Icon(Icons.person, color: AppColors.textPrimary),
                                   const SizedBox(width: 8),
                                   Text(
                                     schedule.professor,
                                     style: const TextStyle(
                                       fontWeight: FontWeight.w600,
-                                      color: Colors.black87,
+                                      color: AppColors.textSecondary,
                                     ),
                                   ),
                                 ],
@@ -302,14 +302,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                 children: [
                                   const Icon(
                                     Icons.meeting_room,
-                                    color: Colors.black,
+                                    color: AppColors.textPrimary,
                                   ),
                                   const SizedBox(width: 8),
                                   Text(
                                     schedule.room,
                                     style: const TextStyle(
                                       fontWeight: FontWeight.w600,
-                                      color: Colors.black87,
+                                      color: AppColors.textSecondary,
                                     ),
                                   ),
                                 ],
@@ -320,14 +320,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                   children: [
                                     const Icon(
                                       Icons.note_alt,
-                                      color: Colors.black,
+                                      color: AppColors.textPrimary,
                                     ),
                                     const SizedBox(width: 8),
                                     Expanded(
                                       child: Text(
                                         schedule.note,
                                         style: const TextStyle(
-                                          color: Colors.black87,
+                                          color: AppColors.textSecondary,
                                         ),
                                       ),
                                     ),
