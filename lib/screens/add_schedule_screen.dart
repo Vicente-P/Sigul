@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sigul/core/app_colors.dart';
 import '../models/schedule.dart';
+import '../models/asignatura.dart';
+import '../services/asignatura_service.dart';
 
 class AddScheduleScreen extends StatefulWidget {
   final String? initialDay;
@@ -13,8 +15,9 @@ class AddScheduleScreen extends StatefulWidget {
 
 class _AddScheduleScreenState extends State<AddScheduleScreen> {
   final _formKey = GlobalKey<FormState>();
+  final AsignaturaService _asignaturaService = AsignaturaService();
 
-  String subject = '';
+  Asignatura? selectedAsignatura;
   String professor = '';
   String room = '';
   late String day;
@@ -84,6 +87,8 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final asignaturas = _asignaturaService.asignaturas;
+
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
@@ -97,13 +102,29 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
           key: _formKey,
           child: ListView(
             children: [
-              TextFormField(
+              DropdownButtonFormField<Asignatura>(
+                isExpanded: true,
+                value: selectedAsignatura,
                 decoration: const InputDecoration(
                   labelText: 'Asignatura',
                   prefixIcon: Icon(Icons.book),
                 ),
-                onSaved: (v) => subject = v ?? '',
-                validator: (v) => v!.isEmpty ? 'Campo requerido' : null,
+                items: asignaturas
+                    .map(
+                      (a) => DropdownMenuItem(
+                        value: a,
+                        child: Text('${a.sigla} - ${a.nombre}'),
+                      ),
+                    )
+                    .toList(),
+                onChanged: (v) {
+                  setState(() {
+                    selectedAsignatura = v;
+                    professor = v?.nombreProfesor ?? '';
+                  });
+                },
+                validator: (v) =>
+                    v == null ? 'Selecciona una asignatura' : null,
               ),
               const SizedBox(height: 12),
 
@@ -112,6 +133,8 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
                   labelText: 'Profesor',
                   prefixIcon: Icon(Icons.person),
                 ),
+                controller: TextEditingController(text: professor),
+                onChanged: (v) => professor = v,
                 onSaved: (v) => professor = v ?? '',
               ),
               const SizedBox(height: 12),
@@ -212,7 +235,7 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
                     _formKey.currentState!.save();
 
                     final newSchedule = Schedule(
-                      subject: subject,
+                      subject: selectedAsignatura?.nombre ?? '',
                       professor: professor,
                       room: room,
                       day: day,
