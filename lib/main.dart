@@ -6,8 +6,9 @@ import 'package:sigul/screens/home_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await initializeDateFormatting('es_CL', null); // Inicializa para Chile
-  Intl.defaultLocale = 'es_CL'; // Usa español de Chile por defecto
+  Intl.defaultLocale = 'es_CL';
   runApp(const MainApp());
 }
 
