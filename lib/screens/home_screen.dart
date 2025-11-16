@@ -3,6 +3,7 @@ import 'package:sigul/screens/calendar_screen.dart';
 import 'package:sigul/screens/map_screen.dart';
 import 'package:sigul/screens/panorama_screen.dart';
 import 'package:sigul/screens/ramos_screen.dart';
+import 'package:sigul/services/notification_service.dart';
 import '../core/app_colors.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -15,6 +16,20 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _searchController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
+  void initState() {
+    super.initState();
+    // Llamamos a la función de permisos al iniciar el Home
+    _requestNotificationPermissions();
+  }
+
+  // --- AÑADE ESTA FUNCIÓN ---
+  void _requestNotificationPermissions() async {
+    // Pequeña demora para asegurar que la app esté lista
+    await Future.delayed(const Duration(seconds: 1));
+    await NotificationService.instance.requestPermissions();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +126,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: TextField(
                         controller: _searchController,
                         decoration: const InputDecoration(
-                          prefixIcon: Icon(Icons.search, color: AppColors.textSecondary),
+                          prefixIcon: Icon(
+                            Icons.search,
+                            color: AppColors.textSecondary,
+                          ),
                           hintText: 'Search...',
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.symmetric(
@@ -144,9 +162,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   Text(
                     'Mapa',
-                    style: Theme.of(
-                      context,
-                    ).textTheme.titleLarge?.copyWith(color: AppColors.textPrimary),
+                    style:
+                        Theme.of(
+                          context,
+                        ).textTheme.titleLarge?.copyWith(
+                          color: AppColors.textPrimary,
+                        ),
                   ),
                   const SizedBox(height: 16),
 
@@ -154,7 +175,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const CampusMapScreen()),
+                        MaterialPageRoute(
+                          builder: (context) => const CampusMapScreen(),
+                        ),
                       );
                     },
                     child: Container(
@@ -175,7 +198,11 @@ class _HomeScreenState extends State<HomeScreen> {
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Icon(Icons.map, size: 50, color: AppColors.darkPrimary),
+                                  Icon(
+                                    Icons.map,
+                                    size: 50,
+                                    color: AppColors.darkPrimary,
+                                  ),
                                   const SizedBox(height: 8),
                                   Text(
                                     'Mapa del Campus',
@@ -200,9 +227,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     padding: const EdgeInsets.only(left: 8.0),
                     child: Text(
                       'Lugares recurrentes',
-                      style: Theme.of(
-                        context,
-                      ).textTheme.titleMedium?.copyWith(color: AppColors.textPrimary),
+                      style:
+                          Theme.of(
+                            context,
+                          ).textTheme.titleMedium?.copyWith(
+                            color: AppColors.textPrimary,
+                          ),
                     ),
                   ),
                   const SizedBox(height: 16),

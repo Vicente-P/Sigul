@@ -1,4 +1,5 @@
 class Schedule {
+  final int notificationId; // ID único para la notificación
   final String subject;
   final String professor;
   final String room;
@@ -9,6 +10,7 @@ class Schedule {
   final String note;
 
   Schedule({
+    required this.notificationId,
     required this.subject,
     required this.professor,
     required this.room,
@@ -19,7 +21,6 @@ class Schedule {
     required this.note,
   });
 
-  // 🔹 Convertir objeto a Map (para JSON)
   Map<String, dynamic> toJson() => {
     'subject': subject,
     'professor': professor,
@@ -31,8 +32,10 @@ class Schedule {
     'note': note,
   };
 
-  // 🔹 Crear objeto desde Map
   factory Schedule.fromJson(Map<String, dynamic> json) => Schedule(
+    notificationId:
+        json['notificationId'] ??
+        DateTime.now().millisecondsSinceEpoch % 2147483647,
     subject: json['subject'],
     professor: json['professor'],
     room: json['room'],

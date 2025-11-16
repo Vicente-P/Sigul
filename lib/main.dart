@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:sigul/core/app_colors.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:sigul/screens/home_screen.dart';
+import 'package:sigul/services/notification_service.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  tz.initializeTimeZones();
+  tz.setLocalLocation(tz.getLocation('America/Santiago'));
+  await NotificationService.instance.init();
+  // ----------------------------------------
   await initializeDateFormatting('es_CL', null); // Inicializa para Chile
   Intl.defaultLocale = 'es_CL';
   runApp(const MainApp());

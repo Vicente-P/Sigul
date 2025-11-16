@@ -3,11 +3,13 @@ import 'package:sigul/core/app_colors.dart';
 import '../models/schedule.dart';
 import '../models/asignatura.dart';
 import '../services/asignatura_service.dart';
+import '../services/notification_service.dart';
 
 class AddScheduleScreen extends StatefulWidget {
   final String? initialDay;
+  final Schedule? existingSchedule;
 
-  const AddScheduleScreen({super.key, this.initialDay});
+  const AddScheduleScreen({super.key, this.initialDay, this.existingSchedule});
 
   @override
   State<AddScheduleScreen> createState() => _AddScheduleScreenState();
@@ -26,10 +28,64 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
   String repetition = 'Cada semana';
   String note = '';
 
+  bool get isEditing => widget.existingSchedule != null;
+
   @override
   void initState() {
     super.initState();
-    day = widget.initialDay ?? 'Lunes';
+
+    if (isEditing) {
+      final s = widget.existingSchedule!;
+      day = s.day;
+      professor = s.professor;
+      room = s.room;
+      repetition = s.repetition;
+      note = s.note;
+      _startTime = _parseTime(s.startTime);
+      _endTime = _parseTime(s.endTime);
+
+      selectedAsignatura = _asignaturaService.asignaturas.firstWhere(
+        (a) => a.nombre == s.subject,
+        orElse: () => _asignaturaService.asignaturas.first,
+      );
+    } else {
+      day = widget.initialDay ?? 'Lunes';
+    }
+  }
+
+  // Parsea correctamente HH:mm o hh:mm a
+  TimeOfDay _parseTime(String timeString) {
+    timeString = timeString.trim();
+
+    final hasAmPm =
+        timeString.toUpperCase().contains('AM') ||
+        timeString.toUpperCase().contains('PM');
+
+    if (hasAmPm) {
+      final period = timeString.toUpperCase().contains('PM') ? 'PM' : 'AM';
+      final cleanTime = timeString.replaceAll(RegExp(r'[^\d:]'), '');
+      final parts = cleanTime.split(':');
+      int hour = int.parse(parts[0]);
+      int minute = int.parse(parts[1]);
+
+      if (period == 'PM' && hour != 12) hour += 12;
+      if (period == 'AM' && hour == 12) hour = 0;
+
+      return TimeOfDay(hour: hour, minute: minute);
+    } else {
+      final parts = timeString.split(':');
+      return TimeOfDay(
+        hour: int.parse(parts[0]),
+        minute: int.parse(parts[1]),
+      );
+    }
+  }
+
+  // Convierte TimeOfDay → "HH:mm" siempre en formato 24h
+  String _formatTime24h(TimeOfDay time) {
+    final hour = time.hour.toString().padLeft(2, '0');
+    final minute = time.minute.toString().padLeft(2, '0');
+    return '$hour:$minute';
   }
 
   final List<String> days = [
@@ -92,7 +148,7 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('Agregar Horario'),
+        title: Text(isEditing ? 'Editar Horario' : 'Agregar Horario'),
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
       ),
@@ -149,7 +205,7 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
               const SizedBox(height: 12),
 
               DropdownButtonFormField<String>(
-                initialValue: day,
+                value: day,
                 decoration: const InputDecoration(
                   labelText: 'Día',
                   prefixIcon: Icon(Icons.calendar_today),
@@ -169,7 +225,7 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
                       title: Text(
                         _startTime == null
                             ? 'Hora inicio'
-                            : 'Desde: ${_startTime!.format(context)}',
+                            : 'Desde: ${_formatTime24h(_startTime!)}',
                         style: const TextStyle(fontSize: 15),
                       ),
                       onTap: () => _pickTime(isStart: true),
@@ -181,7 +237,7 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
                       title: Text(
                         _endTime == null
                             ? 'Hora término'
-                            : 'Hasta: ${_endTime!.format(context)}',
+                            : 'Hasta: ${_formatTime24h(_endTime!)}',
                         style: const TextStyle(fontSize: 15),
                       ),
                       onTap: () => _pickTime(isStart: false),
@@ -192,7 +248,7 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
               const SizedBox(height: 12),
 
               DropdownButtonFormField<String>(
-                initialValue: repetition,
+                value: repetition,
                 decoration: const InputDecoration(
                   labelText: 'Repetición',
                   prefixIcon: Icon(Icons.repeat),
@@ -223,9 +279,9 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
                   ),
                 ),
                 icon: const Icon(Icons.save),
-                label: const Text(
-                  'Guardar',
-                  style: TextStyle(
+                label: Text(
+                  isEditing ? 'Guardar cambios' : 'Guardar',
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
@@ -234,16 +290,66 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
 
+                    if (_startTime == null || _endTime == null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Selecciona horas válidas'),
+                        ),
+                      );
+                      return;
+                    }
+
+                    // Validar que la hora de término sea posterior a la de inicio
+                    final startMinutes =
+                        _startTime!.hour * 60 + _startTime!.minute;
+                    final endMinutes = _endTime!.hour * 60 + _endTime!.minute;
+
+                    if (endMinutes <= startMinutes) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            'La hora de término debe ser posterior a la hora de inicio.',
+                          ),
+                          backgroundColor: Colors.redAccent,
+                        ),
+                      );
+                      return;
+                    }
+
+                    final int notificationId =
+                        DateTime.now().millisecondsSinceEpoch % 2147483647;
+                    if (isEditing) {
+                      NotificationService.instance.cancelNotification(
+                        widget.existingSchedule!.notificationId,
+                      );
+                    }
+
                     final newSchedule = Schedule(
+                      notificationId: notificationId,
                       subject: selectedAsignatura?.nombre ?? '',
                       professor: professor,
                       room: room,
                       day: day,
-                      startTime: _startTime?.format(context) ?? '08:00',
-                      endTime: _endTime?.format(context) ?? '10:00',
+                      startTime: _startTime != null
+                          ? _formatTime24h(_startTime!)
+                          : '08:00',
+                      endTime: _endTime != null
+                          ? _formatTime24h(_endTime!)
+                          : '10:00',
                       repetition: repetition,
                       note: note,
                     );
+
+                    if (_startTime != null) {
+                      NotificationService.instance.scheduleWeeklyClassNotification(
+                        id: notificationId,
+                        title: '¡Clase a punto de empezar!',
+                        body:
+                            'Tu clase de ${newSchedule.subject} comienza en 10 minutos.',
+                        dayName: newSchedule.day, // "Lunes", "Martes", etc.
+                        classTime: _startTime!, // El TimeOfDay del inicio
+                      );
+                    }
 
                     Navigator.pop(context, newSchedule);
                   }
