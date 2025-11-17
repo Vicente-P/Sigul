@@ -3,6 +3,7 @@ import '../models/asignatura.dart';
 import '../services/asignatura_service.dart';
 import '../core/app_colors.dart';
 import 'asignatura_detail_screen.dart';
+import 'notas_screen.dart';
 
 class RamosScreen extends StatefulWidget {
   const RamosScreen({super.key});
@@ -208,6 +209,18 @@ class _RamosScreenState extends State<RamosScreen> {
     }
   }
 
+  void _navegarANotas(Asignatura asignatura) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => NotasScreen(asignatura: asignatura),
+      ),
+    );
+
+    // Actualizar la vista después de volver de la pantalla de notas
+    setState(() {});
+  }
+
   void _mostrarOpcionesAsignatura(Asignatura asignatura) {
     showModalBottomSheet(
       context: context,
@@ -226,7 +239,15 @@ class _RamosScreenState extends State<RamosScreen> {
                 },
               ),
               ListTile(
-                leading: Icon(Icons.edit, color: AppColors.accent),
+                leading: Icon(Icons.grading, color: AppColors.accent),
+                title: Text('Ver notas'),
+                onTap: () {
+                  Navigator.pop(context);
+                  _navegarANotas(asignatura);
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.edit, color: AppColors.primary),
                 title: Text('Editar información'),
                 onTap: () {
                   Navigator.pop(context);
@@ -311,41 +332,78 @@ class _RamosScreenState extends State<RamosScreen> {
                         ),
                       ),
                     ],
+                    // Mostrar promedio de notas si existe
+                    if (asignatura.promedioNotas != null) ...[
+                      SizedBox(height: 8),
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: AppColors.accent.withValues(alpha: 0.2),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.grade, size: 16, color: AppColors.accent),
+                            SizedBox(width: 4),
+                            Text(
+                              'Promedio: ${asignatura.promedioNotas!.toStringAsFixed(1)}',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.accent,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ],
                 ),
               ),
-              PopupMenuButton<String>(
-                icon: Icon(Icons.more_vert, color: AppColors.textSecondary),
-                onSelected: (value) {
-                  switch (value) {
-                    case 'details':
-                      _navegarADetalles(asignatura);
-                      break;
-                    case 'delete':
-                      _confirmarEliminarAsignatura(asignatura);
-                      break;
-                  }
-                },
-                itemBuilder: (BuildContext context) => [
-                  PopupMenuItem<String>(
-                    value: 'details',
-                    child: Row(
-                      children: [
-                        Icon(Icons.visibility, color: AppColors.primary),
-                        SizedBox(width: 8),
-                        Text('Ver detalles'),
-                      ],
-                    ),
+              Column(
+                children: [
+                  // Botón de notas
+                  IconButton(
+                    icon: Icon(Icons.assignment, color: AppColors.accent),
+                    onPressed: () => _navegarANotas(asignatura),
+                    tooltip: 'Ver notas',
                   ),
-                  PopupMenuItem<String>(
-                    value: 'delete',
-                    child: Row(
-                      children: [
-                        Icon(Icons.delete, color: AppColors.error),
-                        SizedBox(width: 8),
-                        Text('Eliminar'),
-                      ],
-                    ),
+                  // Menú de opciones
+                  PopupMenuButton<String>(
+                    icon: Icon(Icons.more_vert, color: AppColors.textSecondary),
+                    onSelected: (value) {
+                      switch (value) {
+                        case 'details':
+                          _navegarADetalles(asignatura);
+                          break;
+                        case 'delete':
+                          _confirmarEliminarAsignatura(asignatura);
+                          break;
+                      }
+                    },
+                    itemBuilder: (BuildContext context) => [
+                      PopupMenuItem<String>(
+                        value: 'details',
+                        child: Row(
+                          children: [
+                            Icon(Icons.visibility, color: AppColors.primary),
+                            SizedBox(width: 8),
+                            Text('Ver detalles'),
+                          ],
+                        ),
+                      ),
+                      PopupMenuItem<String>(
+                        value: 'delete',
+                        child: Row(
+                          children: [
+                            Icon(Icons.delete, color: AppColors.error),
+                            SizedBox(width: 8),
+                            Text('Eliminar'),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

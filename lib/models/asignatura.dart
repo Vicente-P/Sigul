@@ -1,3 +1,5 @@
+import 'evaluacion.dart';
+
 class Asignatura {
   final String id;
   final String nombre;
@@ -9,6 +11,7 @@ class Asignatura {
   final String? nombresAyudantes;
   final String? diaHoraAyudantia;
   final String? emailAyudantes;
+  final List<Evaluacion> evaluaciones;
 
   Asignatura({
     required this.id,
@@ -21,7 +24,8 @@ class Asignatura {
     this.nombresAyudantes,
     this.diaHoraAyudantia,
     this.emailAyudantes,
-  });
+    List<Evaluacion>? evaluaciones,
+  }) : evaluaciones = evaluaciones ?? [];
 
   // Método para validar el formato de la sigla (3 letras + guión + 3 números)
   static bool isValidSigla(String sigla) {
@@ -41,6 +45,7 @@ class Asignatura {
     String? nombresAyudantes,
     String? diaHoraAyudantia,
     String? emailAyudantes,
+    List<Evaluacion>? evaluaciones,
   }) {
     return Asignatura(
       id: id ?? this.id,
@@ -53,6 +58,7 @@ class Asignatura {
       nombresAyudantes: nombresAyudantes ?? this.nombresAyudantes,
       diaHoraAyudantia: diaHoraAyudantia ?? this.diaHoraAyudantia,
       emailAyudantes: emailAyudantes ?? this.emailAyudantes,
+      evaluaciones: evaluaciones ?? this.evaluaciones,
     );
   }
 
@@ -69,6 +75,7 @@ class Asignatura {
       'nombresAyudantes': nombresAyudantes,
       'diaHoraAyudantia': diaHoraAyudantia,
       'emailAyudantes': emailAyudantes,
+      'evaluaciones': evaluaciones.map((e) => e.toJson()).toList(),
     };
   }
 
@@ -85,6 +92,32 @@ class Asignatura {
       nombresAyudantes: map['nombresAyudantes'],
       diaHoraAyudantia: map['diaHoraAyudantia'],
       emailAyudantes: map['emailAyudantes'],
+      evaluaciones: map['evaluaciones'] != null
+          ? (map['evaluaciones'] as List)
+              .map((e) => Evaluacion.fromJson(e))
+              .toList()
+          : [],
     );
+  }
+
+  // Calcular promedio de evaluaciones
+  double? get promedioNotas {
+    if (evaluaciones.isEmpty) return null;
+    
+    // Si hay ponderaciones, calcular promedio ponderado
+    final conPonderacion = evaluaciones.where((e) => e.ponderacion != null);
+    if (conPonderacion.isNotEmpty) {
+      double sumaPonderada = 0;
+      double sumaPonderaciones = 0;
+      for (var eval in conPonderacion) {
+        sumaPonderada += eval.calificacion * (eval.ponderacion! / 100);
+        sumaPonderaciones += eval.ponderacion!;
+      }
+      return sumaPonderaciones > 0 ? (sumaPonderada / sumaPonderaciones) * 100 : null;
+    }
+    
+    // Si no hay ponderaciones, calcular promedio simple
+    double suma = evaluaciones.fold(0, (sum, eval) => sum + eval.calificacion);
+    return suma / evaluaciones.length;
   }
 }
