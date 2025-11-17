@@ -2,6 +2,71 @@
 import '../models/building_model.dart';
 
 class BuildingData {
+  // Generar lista de salas para rangos
+  static List<String> _generarSalas(String prefijo, int inicio, int fin) {
+    List<String> salas = [];
+    for (int i = inicio; i <= fin; i++) {
+      salas.add('$prefijo${i.toString().padLeft(2, '0')}');
+    }
+    return salas;
+  }
+
+  // Obtener todas las salas del Edificio P
+  static List<String> _getSalasEdificioP() {
+    List<String> salas = [];
+    
+    // P101-P115
+    salas.addAll(_generarSalas('P1', 1, 15));
+    
+    // P201-P215
+    salas.addAll(_generarSalas('P2', 1, 15));
+    
+    // P301-P315
+    salas.addAll(_generarSalas('P3', 1, 15));
+    
+    // P401-P415
+    salas.addAll(_generarSalas('P4', 1, 15));
+    
+    // PC01-PC08
+    salas.addAll(_generarSalas('PC', 1, 8));
+    
+    return salas;
+  }
+
+  // Obtener todas las salas del Edificio C
+  static List<String> _getSalasEdificioC() {
+    List<String> salas = [];
+    
+    // C201-C240
+    salas.addAll(_generarSalas('C2', 1, 40));
+    
+    // C365
+    salas.add('C365');
+    
+    return salas;
+  }
+
+  // Obtener todos los edificios con sus salas
+  static List<Building> getAllBuildings() {
+    return [
+      getBuildingData('Edificio P'),
+      getBuildingData('Edificio C'),
+    ];
+  }
+
+  // Buscar edificio por sala
+  static Building? buscarEdificioPorSala(String nombreSala) {
+    final edificios = getAllBuildings();
+    
+    for (var edificio in edificios) {
+      if (edificio.tieneSala(nombreSala)) {
+        return edificio;
+      }
+    }
+    
+    return null;
+  }
+
   static Building getBuildingData(String buildingName) {
     
     if (buildingName == 'Edificio P') {
@@ -9,6 +74,7 @@ class BuildingData {
         name: 'Edificio P',
         description: 'De los edificios más recientes de la universidad, con múltiples salas con computadores. Cuenta con 4 pisos y algunas áreas comunes.',
         image: 'assets/images/edificio_p.png',
+        salas: _getSalasEdificioP(),
         pointsOfInterest: [
           PointOfInterest(
             name: 'Comedor Principal',
@@ -50,6 +116,7 @@ class BuildingData {
         name: 'Edificio C',
         description: 'Edificio con departamento de obras civiles y ciencia de materiales. Cuenta con otros laboratorios como los CIMA. Es de los edificios por los cuales circulan muchos estudiantes para llegar a otros edificios. Cuenta con 2 pisos transitables por estudiantes.',
         image: 'assets/images/edificio_c.jpg',
+        salas: _getSalasEdificioC(),
         pointsOfInterest: [
           PointOfInterest(
             name: 'Kiosco edificio C',

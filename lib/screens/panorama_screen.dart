@@ -6,7 +6,13 @@ import 'package:sigul/screens/building_data.dart';
 
 class PanoramaScreen extends StatefulWidget {
   final String? initialBuilding;
-  const PanoramaScreen({super.key, this.initialBuilding});
+  final bool showDetailsInitially;
+  
+  const PanoramaScreen({
+    super.key, 
+    this.initialBuilding,
+    this.showDetailsInitially = false,
+  });
 
   @override
   State<PanoramaScreen> createState() => _PanoramaScreenState();
@@ -34,7 +40,6 @@ class _PanoramaScreenState extends State<PanoramaScreen> {
   void initState() {
     super.initState();
     
-    // Si viene un edificio específico, seleccionarlo
     if (widget.initialBuilding != null) {
       final selectedLoc = locations.firstWhere(
         (loc) => loc['name'] == widget.initialBuilding,
@@ -42,8 +47,8 @@ class _PanoramaScreenState extends State<PanoramaScreen> {
       );
       _selectedImage = selectedLoc['image']!;
       _selectedName = selectedLoc['name']!;
+      _showBuildingDetails = widget.showDetailsInitially;
     } else {
-      // Comportamiento normal
       _selectedImage = locations[0]['image']!;
       _selectedName = locations[0]['name']!;
     }
@@ -66,7 +71,6 @@ class _PanoramaScreenState extends State<PanoramaScreen> {
         elevation: 4,
         actions: _showBuildingDetails 
             ? [
-                // Botón para volver en modo detalles
                 IconButton(
                   icon: const Icon(Icons.close, color: Colors.white),
                   onPressed: () {
@@ -77,7 +81,6 @@ class _PanoramaScreenState extends State<PanoramaScreen> {
                 ),
               ]
             : [
-                // Botón para detalles en modo panorama
                 IconButton(
                   icon: const Icon(Icons.info_outline, color: Colors.white),
                   onPressed: () {
@@ -94,7 +97,6 @@ class _PanoramaScreenState extends State<PanoramaScreen> {
     );
   }
 
-  // VISTA PANORAMA 360° 
   Widget _buildPanoramaView() {
     return Column(
       children: [
@@ -217,7 +219,6 @@ class _PanoramaScreenState extends State<PanoramaScreen> {
     );
   }
 
-  // DETALLES DEL EDIFICIO
   Widget _buildBuildingDetails() {
     final building = BuildingData.getBuildingData(_selectedName);
     
@@ -229,7 +230,6 @@ class _PanoramaScreenState extends State<PanoramaScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Header con imagen y nombre
                 Card(
                   elevation: 2,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -292,7 +292,6 @@ class _PanoramaScreenState extends State<PanoramaScreen> {
                   ),
                   const SizedBox(height: 16),
 
-                  // Lista de puntos de interés
                   ...building.pointsOfInterest.map((poi) => _buildPOICard(poi, context)),
                 ],
               ],
@@ -300,7 +299,6 @@ class _PanoramaScreenState extends State<PanoramaScreen> {
           ),
         ),
 
-        // Botón para volver al panorama
         Padding(
           padding: const EdgeInsets.all(16),
           child: FilledButton.tonalIcon(
@@ -321,7 +319,6 @@ class _PanoramaScreenState extends State<PanoramaScreen> {
     );
   }
 
-  // Widget para cada punto de interés
   Widget _buildPOICard(PointOfInterest poi, BuildContext context) {
     return Card(
       elevation: 1,

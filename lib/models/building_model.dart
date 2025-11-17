@@ -5,13 +5,22 @@ class Building {
   final String description;
   final String image;
   final List<PointOfInterest> pointsOfInterest;
+  final List<String> salas;
 
   Building({
     required this.name,
     required this.description,
     required this.image,
     required this.pointsOfInterest,
-  });
+    List<String>? salas,
+  }) : salas = salas ?? [];
+
+  // Verificar si una sala pertenece a este edificio
+  bool tieneSala(String nombreSala) {
+    return salas.any((sala) => 
+      sala.toLowerCase() == nombreSala.toLowerCase()
+    );
+  }
 }
 
 class PointOfInterest {
