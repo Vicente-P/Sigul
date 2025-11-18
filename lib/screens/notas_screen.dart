@@ -245,8 +245,7 @@ class _NotasScreenState extends State<NotasScreen> {
     String calificacionStr,
     String ponderacionStr,
     DateTime? fecha,
-  ) {
-    // Validar calificación
+  ) async {
     if (calificacionStr.isEmpty) {
       _mostrarError('Por favor ingresa la calificación');
       return;
@@ -258,7 +257,6 @@ class _NotasScreenState extends State<NotasScreen> {
       return;
     }
 
-    // Validar ponderación (opcional)
     double? ponderacion;
     if (ponderacionStr.isNotEmpty) {
       ponderacion = double.tryParse(ponderacionStr);
@@ -268,7 +266,6 @@ class _NotasScreenState extends State<NotasScreen> {
       }
     }
 
-    // Crear nueva evaluación
     Evaluacion nuevaEvaluacion = Evaluacion(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       tipo: tipo,
@@ -278,7 +275,6 @@ class _NotasScreenState extends State<NotasScreen> {
       fecha: fecha,
     );
 
-    // Actualizar asignatura con nueva evaluación
     List<Evaluacion> evaluacionesActualizadas = List.from(
       _currentAsignatura.evaluaciones,
     )..add(nuevaEvaluacion);
@@ -287,7 +283,7 @@ class _NotasScreenState extends State<NotasScreen> {
       evaluaciones: evaluacionesActualizadas,
     );
 
-    _asignaturaService.actualizarAsignatura(_currentAsignatura);
+    await _asignaturaService.actualizarAsignatura(_currentAsignatura);
 
     setState(() {});
 
@@ -321,7 +317,7 @@ class _NotasScreenState extends State<NotasScreen> {
               ),
             ),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 List<Evaluacion> evaluacionesActualizadas = _currentAsignatura
                     .evaluaciones
                     .where((e) => e.id != evaluacionId)
@@ -331,7 +327,9 @@ class _NotasScreenState extends State<NotasScreen> {
                   evaluaciones: evaluacionesActualizadas,
                 );
 
-                _asignaturaService.actualizarAsignatura(_currentAsignatura);
+                await _asignaturaService.actualizarAsignatura(
+                  _currentAsignatura,
+                );
 
                 setState(() {});
 
@@ -393,7 +391,6 @@ class _NotasScreenState extends State<NotasScreen> {
       ),
       body: Column(
         children: [
-          // Header con información de la asignatura
           Container(
             width: double.infinity,
             padding: EdgeInsets.all(20),
@@ -445,9 +442,22 @@ class _NotasScreenState extends State<NotasScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
-                          Icons.trending_up,
-                          color: _getColorCalificacion(promedio),
+                        Tooltip(
+                          message:
+                              'Promedio ponderado:\nSuma de (calificación × ponderación) / Suma de ponderaciones\nSi no hay ponderaciones, se calcula el promedio simple.',
+                          textStyle: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                          ),
+                          padding: EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: AppColors.darkPrimary,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Icon(
+                            Icons.trending_up,
+                            color: _getColorCalificacion(promedio),
+                          ),
                         ),
                         SizedBox(width: 8),
                         Text(
@@ -465,13 +475,6 @@ class _NotasScreenState extends State<NotasScreen> {
                             color: _getColorCalificacion(promedio),
                           ),
                         ),
-                        Text(
-                          ' pts',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: AppColors.textSecondary,
-                          ),
-                        ),
                       ],
                     ),
                   ),
@@ -480,7 +483,6 @@ class _NotasScreenState extends State<NotasScreen> {
             ),
           ),
 
-          // Lista de evaluaciones
           Expanded(
             child: _currentAsignatura.evaluaciones.isEmpty
                 ? Center(

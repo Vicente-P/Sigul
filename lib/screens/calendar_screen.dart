@@ -30,16 +30,15 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   String _formatTimeTo12h(String time24h) {
     try {
-      // Aseguramos formato válido
       final parts = time24h.split(':');
       int hour = int.parse(parts[0]);
       int minute = int.parse(parts[1]);
 
       final period = hour >= 12 ? 'PM' : 'AM';
       if (hour == 0) {
-        hour = 12; // medianoche
+        hour = 12;
       } else if (hour > 12) {
-        hour -= 12; // 13→1, 14→2, etc.
+        hour -= 12;
       }
 
       final hourStr = hour.toString().padLeft(2, '0');
@@ -47,7 +46,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
       return '$hourStr:$minuteStr $period';
     } catch (_) {
-      // Si por alguna razón el formato no es válido, lo devolvemos tal cual
       return time24h;
     }
   }
@@ -118,14 +116,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
   }
 
   Future<void> _deleteSchedule(int index) async {
-    // 1. Obtenemos el ID de la notificación ANTES de borrar el horario
     final int notificationId = schedules[index].notificationId;
     setState(() {
       schedules.removeAt(index);
     });
     await _saveSchedules();
 
-    // 2. Cancelamos la notificación
     NotificationService.instance.cancelNotification(notificationId);
   }
 
@@ -245,7 +241,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
           ),
           const SizedBox(height: 8),
 
-          // Lista de horarios del día seleccionado
           Expanded(
             child: filteredSchedules.isEmpty
                 ? const Center(child: Text('No hay clases programadas.'))

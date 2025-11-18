@@ -33,6 +33,11 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
   @override
   void initState() {
     super.initState();
+    _loadInitialData();
+  }
+
+  Future<void> _loadInitialData() async {
+    final asignaturas = await _asignaturaService.asignaturas;
 
     if (isEditing) {
       final s = widget.existingSchedule!;
@@ -44,16 +49,19 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
       _startTime = _parseTime(s.startTime);
       _endTime = _parseTime(s.endTime);
 
-      selectedAsignatura = _asignaturaService.asignaturas.firstWhere(
-        (a) => a.nombre == s.subject,
-        orElse: () => _asignaturaService.asignaturas.first,
-      );
+      if (asignaturas.isNotEmpty) {
+        selectedAsignatura = asignaturas.firstWhere(
+          (a) => a.nombre == s.subject,
+          orElse: () => asignaturas.first,
+        );
+      }
     } else {
       day = widget.initialDay ?? 'Lunes';
     }
+    
+    setState(() {});
   }
 
-  // Parsea correctamente HH:mm o hh:mm a
   TimeOfDay _parseTime(String timeString) {
     timeString = timeString.trim();
 
@@ -81,7 +89,6 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
     }
   }
 
-  // Convierte TimeOfDay → "HH:mm" siempre en formato 24h
   String _formatTime24h(TimeOfDay time) {
     final hour = time.hour.toString().padLeft(2, '0');
     final minute = time.minute.toString().padLeft(2, '0');
@@ -143,8 +150,6 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final asignaturas = _asignaturaService.asignaturas;
-
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
@@ -152,72 +157,85 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            children: [
-              DropdownButtonFormField<Asignatura>(
-                isExpanded: true,
-                value: selectedAsignatura,
-                decoration: const InputDecoration(
-                  labelText: 'Asignatura',
-                  prefixIcon: Icon(Icons.book),
-                ),
-                items: asignaturas
-                    .map(
-                      (a) => DropdownMenuItem(
-                        value: a,
-                        child: Text('${a.sigla} - ${a.nombre}'),
-                      ),
-                    )
-                    .toList(),
-                onChanged: (v) {
-                  setState(() {
-                    selectedAsignatura = v;
-                    professor = v?.nombreProfesor ?? '';
-                  });
-                },
-                validator: (v) =>
-                    v == null ? 'Selecciona una asignatura' : null,
-              ),
-              const SizedBox(height: 12),
+      body: FutureBuilder<List<Asignatura>>(
+        future: _asignaturaService.asignaturas,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
 
-              TextFormField(
-                decoration: const InputDecoration(
-                  labelText: 'Profesor',
-                  prefixIcon: Icon(Icons.person),
-                ),
-                controller: TextEditingController(text: professor),
-                onChanged: (v) => professor = v,
-                onSaved: (v) => professor = v ?? '',
-              ),
-              const SizedBox(height: 12),
+          if (snapshot.hasError) {
+            return Center(child: Text('Error al cargar asignaturas'));
+          }
 
-              TextFormField(
-                decoration: const InputDecoration(
-                  labelText: 'Aula',
-                  prefixIcon: Icon(Icons.room),
-                ),
-                onSaved: (v) => room = v ?? '',
-              ),
-              const SizedBox(height: 12),
+          final asignaturas = snapshot.data ?? [];
 
-              DropdownButtonFormField<String>(
-                value: day,
-                decoration: const InputDecoration(
-                  labelText: 'Día',
-                  prefixIcon: Icon(Icons.calendar_today),
-                ),
-                items: days
-                    .map((d) => DropdownMenuItem(value: d, child: Text(d)))
-                    .toList(),
-                onChanged: (v) => setState(() => day = v!),
-              ),
-              const SizedBox(height: 12),
+          return Padding(
+            padding: const EdgeInsets.all(16),
+            child: Form(
+              key: _formKey,
+              child: ListView(
+                children: [
+                  DropdownButtonFormField<Asignatura>(
+                    isExpanded: true,
+                    value: selectedAsignatura,
+                    decoration: const InputDecoration(
+                      labelText: 'Asignatura',
+                      prefixIcon: Icon(Icons.book),
+                    ),
+                    items: asignaturas
+                        .map(
+                          (a) => DropdownMenuItem(
+                            value: a,
+                            child: Text('${a.sigla} - ${a.nombre}'),
+                          ),
+                        )
+                        .toList(),
+                    onChanged: (v) {
+                      setState(() {
+                        selectedAsignatura = v;
+                        professor = v?.nombreProfesor ?? '';
+                      });
+                    },
+                    validator: (v) =>
+                        v == null ? 'Selecciona una asignatura' : null,
+                  ),
+                  const SizedBox(height: 12),
 
-              Row(
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      labelText: 'Profesor',
+                      prefixIcon: Icon(Icons.person),
+                    ),
+                    controller: TextEditingController(text: professor),
+                    onChanged: (v) => professor = v,
+                    onSaved: (v) => professor = v ?? '',
+                  ),
+                  const SizedBox(height: 12),
+
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      labelText: 'Aula',
+                      prefixIcon: Icon(Icons.room),
+                    ),
+                    onSaved: (v) => room = v ?? '',
+                  ),
+                  const SizedBox(height: 12),
+
+                  DropdownButtonFormField<String>(
+                    value: day,
+                    decoration: const InputDecoration(
+                      labelText: 'Día',
+                      prefixIcon: Icon(Icons.calendar_today),
+                    ),
+                    items: days
+                        .map((d) => DropdownMenuItem(value: d, child: Text(d)))
+                        .toList(),
+                    onChanged: (v) => setState(() => day = v!),
+                  ),
+                  const SizedBox(height: 12),
+
+                  Row(
                 children: [
                   Expanded(
                     child: ListTile(
@@ -299,7 +317,6 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
                       return;
                     }
 
-                    // Validar que la hora de término sea posterior a la de inicio
                     final startMinutes =
                         _startTime!.hour * 60 + _startTime!.minute;
                     final endMinutes = _endTime!.hour * 60 + _endTime!.minute;
@@ -346,8 +363,8 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
                         title: '¡Clase a punto de empezar!',
                         body:
                             'Tu clase de ${newSchedule.subject} comienza en 10 minutos.',
-                        dayName: newSchedule.day, // "Lunes", "Martes", etc.
-                        classTime: _startTime!, // El TimeOfDay del inicio
+                        dayName: newSchedule.day,
+                        classTime: _startTime!,
                       );
                     }
 
@@ -358,6 +375,8 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
             ],
           ),
         ),
+      );
+        },
       ),
     );
   }

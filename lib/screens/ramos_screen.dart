@@ -94,7 +94,7 @@ class _RamosScreenState extends State<RamosScreen> {
     );
   }
 
-  void _agregarAsignatura() {
+  void _agregarAsignatura() async {
     String nombre = _nombreController.text.trim();
     String sigla = _siglaController.text.trim().toUpperCase();
 
@@ -115,7 +115,7 @@ class _RamosScreenState extends State<RamosScreen> {
       return;
     }
 
-    if (_asignaturaService.existeSigla(sigla)) {
+    if (await _asignaturaService.existeSigla(sigla)) {
       _mostrarError('Ya existe una asignatura con esa sigla');
       return;
     }
@@ -126,7 +126,7 @@ class _RamosScreenState extends State<RamosScreen> {
       sigla: sigla,
     );
 
-    _asignaturaService.agregarAsignatura(nuevaAsignatura);
+    await _asignaturaService.agregarAsignatura(nuevaAsignatura);
     Navigator.of(context).pop();
     setState(() {});
 
@@ -171,8 +171,8 @@ class _RamosScreenState extends State<RamosScreen> {
               ),
             ),
             ElevatedButton(
-              onPressed: () {
-                _asignaturaService.eliminarAsignatura(asignatura.id);
+              onPressed: () async {
+                await _asignaturaService.eliminarAsignatura(asignatura.id);
                 Navigator.of(context).pop();
                 setState(() {});
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -217,7 +217,6 @@ class _RamosScreenState extends State<RamosScreen> {
       ),
     );
 
-    // Actualizar la vista después de volver de la pantalla de notas
     setState(() {});
   }
 
@@ -332,7 +331,6 @@ class _RamosScreenState extends State<RamosScreen> {
                         ),
                       ),
                     ],
-                    // Mostrar promedio de notas si existe
                     if (asignatura.promedioNotas != null) ...[
                       SizedBox(height: 8),
                       Container(
@@ -363,13 +361,11 @@ class _RamosScreenState extends State<RamosScreen> {
               ),
               Column(
                 children: [
-                  // Botón de notas
                   IconButton(
                     icon: Icon(Icons.assignment, color: AppColors.accent),
                     onPressed: () => _navegarANotas(asignatura),
                     tooltip: 'Ver notas',
                   ),
-                  // Menú de opciones
                   PopupMenuButton<String>(
                     icon: Icon(Icons.more_vert, color: AppColors.textSecondary),
                     onSelected: (value) {
@@ -416,8 +412,6 @@ class _RamosScreenState extends State<RamosScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List<Asignatura> asignaturas = _asignaturaService.asignaturas;
-
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
@@ -431,8 +425,26 @@ class _RamosScreenState extends State<RamosScreen> {
         backgroundColor: AppColors.primary,
         elevation: 0,
       ),
-      body: asignaturas.isEmpty
-          ? Center(
+      body: FutureBuilder<List<Asignatura>>(
+        future: _asignaturaService.asignaturas,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+
+          if (snapshot.hasError) {
+            return Center(
+              child: Text(
+                'Error al cargar asignaturas',
+                style: TextStyle(color: AppColors.error),
+              ),
+            );
+          }
+
+          List<Asignatura> asignaturas = snapshot.data ?? [];
+
+          if (asignaturas.isEmpty) {
+            return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -469,14 +481,16 @@ class _RamosScreenState extends State<RamosScreen> {
                   ),
                 ],
               ),
-            )
-          : Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Text(
-                    'Toca una asignatura para ver sus detalles',
-                    style: TextStyle(
+            );
+          }
+
+          return Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.all(16),
+                child: Text(
+                  'Toca una asignatura para ver sus detalles',
+                  style: TextStyle(
                       fontSize: 14,
                       color: AppColors.textSecondary,
                       fontStyle: FontStyle.italic,
@@ -494,7 +508,9 @@ class _RamosScreenState extends State<RamosScreen> {
                   ),
                 ),
               ],
-            ),
+            );
+        },
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: _mostrarDialogoAgregarAsignatura,
         backgroundColor: AppColors.accent,

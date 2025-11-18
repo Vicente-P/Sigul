@@ -61,8 +61,8 @@ class _AsignaturaDetailScreenState extends State<AsignaturaDetailScreen> {
     });
   }
 
-  void _guardarCambios() {
-    _asignaturaService.actualizarAsignatura(_currentAsignatura);
+  void _guardarCambios() async {
+    await _asignaturaService.actualizarAsignatura(_currentAsignatura);
     setState(() {
       _hasChanges = false;
     });
@@ -125,10 +125,9 @@ class _AsignaturaDetailScreenState extends State<AsignaturaDetailScreen> {
               ),
             ),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 String valor = controller.text.trim();
                 
-                // Validaciones específicas
                 if (esRequerido && valor.isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
@@ -149,7 +148,7 @@ class _AsignaturaDetailScreenState extends State<AsignaturaDetailScreen> {
                   return;
                 }
 
-                if (campo == 'sigla' && valor.isNotEmpty && _asignaturaService.existeSigla(valor.toUpperCase(), excludeId: _currentAsignatura.id)) {
+                if (campo == 'sigla' && valor.isNotEmpty && await _asignaturaService.existeSigla(valor.toUpperCase(), excludeId: _currentAsignatura.id)) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text('Ya existe una asignatura con esa sigla'),

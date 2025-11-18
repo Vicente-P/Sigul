@@ -2,7 +2,6 @@
 import '../models/building_model.dart';
 
 class BuildingData {
-  // Generar lista de salas para rangos
   static List<String> _generarSalas(String prefijo, int inicio, int fin) {
     List<String> salas = [];
     for (int i = inicio; i <= fin; i++) {
@@ -11,42 +10,32 @@ class BuildingData {
     return salas;
   }
 
-  // Obtener todas las salas del Edificio P
   static List<String> _getSalasEdificioP() {
     List<String> salas = [];
     
-    // P101-P115
     salas.addAll(_generarSalas('P1', 1, 15));
     
-    // P201-P215
     salas.addAll(_generarSalas('P2', 1, 15));
     
-    // P301-P315
     salas.addAll(_generarSalas('P3', 1, 15));
     
-    // P401-P415
     salas.addAll(_generarSalas('P4', 1, 15));
     
-    // PC01-PC08
     salas.addAll(_generarSalas('PC', 1, 8));
     
     return salas;
   }
 
-  // Obtener todas las salas del Edificio C
   static List<String> _getSalasEdificioC() {
     List<String> salas = [];
     
-    // C201-C240
     salas.addAll(_generarSalas('C2', 1, 40));
     
-    // C365
     salas.add('C365');
     
     return salas;
   }
 
-  // Obtener todos los edificios con sus salas
   static List<Building> getAllBuildings() {
     return [
       getBuildingData('Edificio P'),
@@ -54,7 +43,6 @@ class BuildingData {
     ];
   }
 
-  // Buscar edificio por sala
   static Building? buscarEdificioPorSala(String nombreSala) {
     final edificios = getAllBuildings();
     
@@ -134,7 +122,6 @@ class BuildingData {
       );
     }
     
-    // Ejemplo por defecto para otros edificios
     return Building(
       name: buildingName,
       description: 'Edificio del campus universitario con instalaciones modernas y espacios adaptados para el aprendizaje.',
