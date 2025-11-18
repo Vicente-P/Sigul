@@ -7,9 +7,9 @@ import 'package:sigul/screens/building_data.dart';
 class PanoramaScreen extends StatefulWidget {
   final String? initialBuilding;
   final bool showDetailsInitially;
-  
+
   const PanoramaScreen({
-    super.key, 
+    super.key,
     this.initialBuilding,
     this.showDetailsInitially = false,
   });
@@ -20,15 +20,18 @@ class PanoramaScreen extends StatefulWidget {
 
 class _PanoramaScreenState extends State<PanoramaScreen> {
   final List<Map<String, String>> locations = [
-    {'name': 'Entrada Ingeniería', 'image': 'assets/images/panorama01.webp'},
-    {'name': 'Piscina', 'image': 'assets/images/panorama_piscina.webp'},
-    {'name': 'Edificio A', 'image': 'assets/images/panorama03.webp'},
-    {'name': 'Edificio B', 'image': 'assets/images/panorama04.webp'},
-    {'name': 'Edificio C', 'image': 'assets/images/panorama_c.webp'},
-    {'name': 'Patio los Ceibos', 'image': 'assets/images/panorama_patio.webp'},
-    {'name': 'Edificio F', 'image': 'assets/images/panorama_f.webp'},
+    {'name': 'Piscina', 'image': 'assets/images/piscina_edificio_b.webp'},
+    {'name': 'Edificio C', 'image': 'assets/images/edificio_c.webp'},
+    {
+      'name': 'Patio los Ceibos',
+      'image': 'assets/images/patio_edificio_f.webp',
+    },
+    {
+      'name': 'Edificio F',
+      'image': 'assets/images/entrada_edificio_f2_f3.webp',
+    },
     {'name': 'Biblioteca Central', 'image': 'assets/images/panorama08.webp'},
-    {'name': 'Edificio P', 'image': 'assets/images/panorama_p.webp'},
+    {'name': 'Edificio P', 'image': 'assets/images/edificio_p_entrada.webp'},
     {'name': 'Gimnasio', 'image': 'assets/images/panorama10.webp'},
   ];
 
@@ -39,7 +42,7 @@ class _PanoramaScreenState extends State<PanoramaScreen> {
   @override
   void initState() {
     super.initState();
-    
+
     if (widget.initialBuilding != null) {
       final selectedLoc = locations.firstWhere(
         (loc) => loc['name'] == widget.initialBuilding,
@@ -60,7 +63,9 @@ class _PanoramaScreenState extends State<PanoramaScreen> {
       backgroundColor: AppColors.background,
       appBar: AppBar(
         title: Text(
-          _showBuildingDetails ? 'Detalles del Edificio' : 'Recorrido Virtual 360°',
+          _showBuildingDetails
+              ? 'Detalles del Edificio'
+              : 'Recorrido Virtual 360°',
           style: const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -69,7 +74,7 @@ class _PanoramaScreenState extends State<PanoramaScreen> {
         centerTitle: true,
         backgroundColor: AppColors.primary,
         elevation: 4,
-        actions: _showBuildingDetails 
+        actions: _showBuildingDetails
             ? [
                 IconButton(
                   icon: const Icon(Icons.close, color: Colors.white),
@@ -91,7 +96,7 @@ class _PanoramaScreenState extends State<PanoramaScreen> {
                 ),
               ],
       ),
-      body: _showBuildingDetails 
+      body: _showBuildingDetails
           ? _buildBuildingDetails()
           : _buildPanoramaView(),
     );
@@ -221,7 +226,7 @@ class _PanoramaScreenState extends State<PanoramaScreen> {
 
   Widget _buildBuildingDetails() {
     final building = BuildingData.getBuildingData(_selectedName);
-    
+
     return Column(
       children: [
         Expanded(
@@ -232,25 +237,30 @@ class _PanoramaScreenState extends State<PanoramaScreen> {
               children: [
                 Card(
                   elevation: 2,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
                   child: Column(
                     children: [
                       ClipRRect(
-                        borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                        borderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(16),
+                        ),
                         child: Image.asset(
                           building.image,
                           height: 200,
                           width: double.infinity,
                           fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) => Container(
-                            height: 200,
-                            color: AppColors.lightPrimary,
-                            child: Icon(
-                              Icons.business,
-                              size: 60,
-                              color: AppColors.primary,
-                            ),
-                          ),
+                          errorBuilder: (context, error, stackTrace) =>
+                              Container(
+                                height: 200,
+                                color: AppColors.lightPrimary,
+                                child: Icon(
+                                  Icons.business,
+                                  size: 60,
+                                  color: AppColors.primary,
+                                ),
+                              ),
                         ),
                       ),
                       Padding(
@@ -260,17 +270,19 @@ class _PanoramaScreenState extends State<PanoramaScreen> {
                           children: [
                             Text(
                               building.name,
-                              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                color: AppColors.textPrimary,
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: Theme.of(context).textTheme.headlineSmall
+                                  ?.copyWith(
+                                    color: AppColors.textPrimary,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                             ),
                             const SizedBox(height: 8),
                             Text(
                               building.description,
-                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                color: AppColors.textSecondary,
-                              ),
+                              style: Theme.of(context).textTheme.bodyMedium
+                                  ?.copyWith(
+                                    color: AppColors.textSecondary,
+                                  ),
                             ),
                           ],
                         ),
@@ -281,7 +293,6 @@ class _PanoramaScreenState extends State<PanoramaScreen> {
 
                 const SizedBox(height: 24),
 
-                
                 if (building.pointsOfInterest.isNotEmpty) ...[
                   Text(
                     'Lugares de Interés',
@@ -292,7 +303,9 @@ class _PanoramaScreenState extends State<PanoramaScreen> {
                   ),
                   const SizedBox(height: 16),
 
-                  ...building.pointsOfInterest.map((poi) => _buildPOICard(poi, context)),
+                  ...building.pointsOfInterest.map(
+                    (poi) => _buildPOICard(poi, context),
+                  ),
                 ],
               ],
             ),
@@ -359,7 +372,7 @@ class _PanoramaScreenState extends State<PanoramaScreen> {
               ),
             ),
             const SizedBox(width: 16),
-            
+
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -398,15 +411,6 @@ class _PanoramaScreenState extends State<PanoramaScreen> {
     );
   }
 
-  
-
-
-
-
-
-
-
-  
   void _showImageDialog(BuildContext context, PointOfInterest poi) {
     showDialog(
       context: context,
@@ -431,21 +435,24 @@ class _PanoramaScreenState extends State<PanoramaScreen> {
                     Expanded(
                       child: Text(
                         poi.name,
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          color: AppColors.textPrimary,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(
+                              color: AppColors.textPrimary,
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
                     ),
                   ],
                 ),
               ),
             ),
-          
+
             GestureDetector(
               onTap: () => Navigator.of(context).pop(),
               child: ClipRRect(
-                borderRadius: const BorderRadius.vertical(bottom: Radius.circular(16)),
+                borderRadius: const BorderRadius.vertical(
+                  bottom: Radius.circular(16),
+                ),
                 child: Container(
                   width: double.infinity,
                   height: 300,
@@ -476,5 +483,4 @@ class _PanoramaScreenState extends State<PanoramaScreen> {
       ),
     );
   }
-
 }

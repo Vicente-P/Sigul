@@ -14,6 +14,7 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart'; // Para l
 
 // Asumo que este archivo existe en tu proyecto
 import 'package:sigul/core/app_colors.dart';
+import 'package:sigul/screens/panorama_screen.dart';
 
 // --- 1. Modelo de datos para los edificios ---
 class Building {
@@ -190,9 +191,14 @@ class _CampusMapScreenState extends State<CampusMapScreen> {
             ElevatedButton.icon(
               onPressed: () {
                 Navigator.pop(context);
-                ScaffoldMessenger.of(
-                  scaffoldContext,
-                ).showSnackBar(SnackBar(content: Text("Detalles de $name")));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PanoramaScreen(
+                      initialBuilding: name,
+                    ),
+                  ),
+                );
               },
               icon: Icon(Icons.info_outline, size: 18),
               label: Text("Ver más detalles"),
