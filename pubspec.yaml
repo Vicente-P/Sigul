@@ -14,6 +14,7 @@ dependencies:
   panorama_viewer: ^2.0.7
   flutter_local_notifications: ^19.5.0
   timezone: ^0.10.1
+  flutter_launcher_icons: ^0.14.4
 
   #dependencias mapa
   flutter_map: ^7.0.1  
@@ -36,3 +37,8 @@ flutter:
   assets:
     - assets/images/
     - assets/tiles/
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/logo.png"
