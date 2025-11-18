@@ -329,7 +329,6 @@ class _PanoramaScreenState extends State<PanoramaScreen> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Imagen del POI 
             GestureDetector(
               onTap: () => _showImageDialog(context, poi),
               child: Container(
@@ -361,7 +360,6 @@ class _PanoramaScreenState extends State<PanoramaScreen> {
             ),
             const SizedBox(width: 16),
             
-            // Información del POI
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -409,7 +407,6 @@ class _PanoramaScreenState extends State<PanoramaScreen> {
 
 
   
-  //Dialog M3 para imagen ampliada
   void _showImageDialog(BuildContext context, PointOfInterest poi) {
     showDialog(
       context: context,
@@ -419,7 +416,6 @@ class _PanoramaScreenState extends State<PanoramaScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Header con nombre
             Card(
               color: AppColors.background,
               margin: EdgeInsets.zero,
@@ -446,9 +442,8 @@ class _PanoramaScreenState extends State<PanoramaScreen> {
               ),
             ),
           
-            // Imagen ampliada
             GestureDetector(
-              onTap: () => Navigator.of(context).pop(), // Cerrar al tocar la imagen
+              onTap: () => Navigator.of(context).pop(),
               child: ClipRRect(
                 borderRadius: const BorderRadius.vertical(bottom: Radius.circular(16)),
                 child: Container(

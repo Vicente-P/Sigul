@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sigul/screens/calendar_screen.dart';
 import 'package:sigul/screens/map_screen.dart';
 import 'package:sigul/screens/panorama_screen.dart';
+import 'package:sigul/screens/ramos_screen.dart';
 import 'package:sigul/core/app_colors.dart';
 import 'package:sigul/models/building_model.dart';
 import 'building_data.dart';
@@ -179,6 +180,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 icon: Icon(Icons.calendar_today_outlined),
                 selectedIcon: Icon(Icons.calendar_today),
                 label: Text('Horarios'),
+              ),
+              NavigationRailDestination(
+                icon: Icon(Icons.school_outlined),
+                selectedIcon: Icon(Icons.school),
+                label: Text('Asignaturas'),
               ),
               NavigationRailDestination(
                 icon: Icon(Icons.apartment_outlined),
@@ -478,6 +484,9 @@ class _HomeScreenState extends State<HomeScreen> {
         Navigator.push(context, MaterialPageRoute(builder: (context) => const CalendarScreen()));
         break;
       case 3:
+        Navigator.push(context, MaterialPageRoute(builder: (context) => const RamosScreen()));
+        break;
+      case 4:
         Navigator.push(context, MaterialPageRoute(builder: (context) => const PanoramaScreen()));
         break;
     }
