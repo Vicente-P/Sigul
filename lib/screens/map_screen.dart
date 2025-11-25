@@ -84,6 +84,7 @@ class _CampusMapScreenState extends State<CampusMapScreen> {
       coordinates: LatLng(-33.035737, -71.593046),
       imagePath: 'assets/images/panorama03.webp',
     ),
+    
   ];
 
   // --- variables de estado para Rutas ---
