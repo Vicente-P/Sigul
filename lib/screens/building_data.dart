@@ -21,7 +21,7 @@ class BuildingData {
     
     salas.addAll(_generarSalas('P4', 1, 15));
     
-    salas.addAll(_generarSalas('PC', 1, 8));
+    salas.addAll(_generarSalas('PC', 1, 10));
     
     return salas;
   }
@@ -95,6 +95,47 @@ class BuildingData {
             floor: 'Piso 1',
           ),
         ],
+      
+        orientation: """
+📋 **Sistema de Numeración de Salas**
+
+• **PC##** - Salas del subterráneo (Piso 0)
+• **P1##** - Salas del primer piso 
+• **P2##** - Salas del segundo piso
+• **P3##** - Salas del tercer piso  
+• **P4##** - Salas del cuarto piso
+
+🗺️ **Distribución por Pisos**
+
+**Piso 0 (Subterráneo):**
+- Laboratorios de computación (PC01-PC10)
+- Oficina administrativa
+
+**Piso 1:**
+- Salas P101-P115
+- LABUX
+
+**Piso 2:**
+- Salas P201-P215
+- Área de sillones para descanso
+
+**Piso 3:**
+- Salas P301-P315
+- Cenade
+
+**Piso 4:**
+- Salas P401-P415
+- Comedor principal
+- Subida a kiosco terraza
+
+💡 **Consejos de Orientación**
+• Hay salas con puertas en ambos lados de los pasillos
+• Hay salas de estudio en todos los pisos
+• Ascensores cerca de los baños en casi todos los pisos
+• Las numeraciones de salas aumentan conforme vas al fondo del edificio
+• Señalización de numeración de salas en cada piso junto a las puertas
+""",
+      
       );
     }
 
@@ -119,6 +160,38 @@ class BuildingData {
             floor: 'Piso 1',
           ),
         ],
+      
+        orientation: """
+📋 **Sistema de Numeración de Salas**
+
+• **C20#** - Salas del primer pasillo
+• **C22#** - Salas del segundo pasillo
+• **C23#** - Salas del tercer pasillo
+
+🗺️ **Distribución por Pisos**
+
+**Piso 1:**
+- Salas C201-C23# (lado norte)
+- Baños mixtos
+- Cajero automático
+- OSI: Lugar de impresiones, fotocopias y venta de útiles
+- Departamento de obras civiles
+- Laboratorios CIMA
+
+**Piso 2:**
+- Algunas salas C23# (pasillo 3)
+- Kiosco del edificio C
+
+
+💡 **Consejos de Orientación**
+• La mayoría de las salas están en los pasillos a mano derecha al entrar desde Placeres
+• Hay algunas salas ubicadas en el tercer pasillo (C23#) que están subiendo unas escaleras.
+• Bajando las escaleras por el pasillo principal hay un pequeño espacio con baños y maquinas expendedoras
+• Pasillo de las salas C22# conecta con subida a Salida por Valdés, Edificio M y Gimnasios
+• Al comienzo de cada pasillo hay una lista con la numeración de las salas
+""",
+
+      
       );
     }
     

@@ -6,12 +6,14 @@ class Building {
   final String image;
   final List<PointOfInterest> pointsOfInterest;
   final List<String> salas;
+  final String orientation;
 
   Building({
     required this.name,
     required this.description,
     required this.image,
     required this.pointsOfInterest,
+    this.orientation = '',
     List<String>? salas,
   }) : salas = salas ?? [];
 

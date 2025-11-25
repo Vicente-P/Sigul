@@ -291,6 +291,40 @@ class _PanoramaScreenState extends State<PanoramaScreen> {
                   ),
                 ),
 
+                // NUEVA SECCIÓN DE ORIENTACIÓN
+                if (building.orientation.isNotEmpty) ...[
+                  const SizedBox(height: 24),
+                  Card(
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(Icons.explore, color: AppColors.primary),
+                              const SizedBox(width: 8),
+                              Text(
+                                'Cómo Orientarse en el Edificio',
+                                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                  color: AppColors.textPrimary,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 12),
+                          _parseFormattedText(building.orientation, context),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+
                 const SizedBox(height: 24),
 
                 if (building.pointsOfInterest.isNotEmpty) ...[
@@ -483,4 +517,87 @@ class _PanoramaScreenState extends State<PanoramaScreen> {
       ),
     );
   }
+
+  Widget _parseFormattedText(String text, BuildContext context) {
+    final lines = text.split('\n');
+    List<TextSpan> spans = [];
+
+    for (String line in lines) {
+      if (line.trim().isEmpty) {
+        spans.add(const TextSpan(text: '\n'));
+        continue;
+      }
+
+      // Detectar títulos (líneas que empiezan con emoji y texto en negrita)
+      if (line.contains('**') || line.startsWith('•') || line.startsWith('📋') || line.startsWith('🗺️') || line.startsWith('💡')) {
+        // Extraer texto entre ** ** para negrita
+        final boldRegex = RegExp(r'\*\*(.*?)\*\*');
+        final matches = boldRegex.allMatches(line);
+      
+        if (matches.isEmpty) {
+          // Si no hay negrita pero es una línea especial
+          spans.add(TextSpan(
+            text: '$line\n',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: AppColors.textPrimary,
+              fontWeight: FontWeight.bold,
+              height: 1.5,
+            ),
+          ));
+        } else {
+          // Procesar texto con negritas
+          int lastIndex = 0;
+          for (final match in matches) {
+            // Texto antes del **
+            if (match.start > lastIndex) {
+              spans.add(TextSpan(
+                text: line.substring(lastIndex, match.start),
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: AppColors.textSecondary,
+                  height: 1.5,
+                ),
+              ));
+            }
+            // Texto en negrita
+            spans.add(TextSpan(
+              text: match.group(1),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: AppColors.textPrimary,
+                fontWeight: FontWeight.bold,
+                height: 1.5,
+              ),
+            ));
+            lastIndex = match.end;
+          }
+          // Texto después del último **
+          if (lastIndex < line.length) {
+            spans.add(TextSpan(
+              text: line.substring(lastIndex),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: AppColors.textSecondary,
+                height: 1.5,
+              ),
+            ));
+          }
+          spans.add(const TextSpan(text: '\n'));
+        }
+      } else {
+        // Línea normal
+        spans.add(TextSpan(
+          text: '$line\n',
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            color: AppColors.textSecondary,
+            height: 1.5,
+          ),
+        ));
+      }
+    }
+
+    return RichText(
+      text: TextSpan(
+        children: spans,
+      ),
+    );
+  }
+
 }
