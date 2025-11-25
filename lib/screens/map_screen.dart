@@ -217,6 +217,18 @@ class _CampusMapScreenState extends State<CampusMapScreen> {
     );
   }
 
+  void _clearStartBuilding() {
+    setState(() {
+      _startBuilding = null;
+    });
+  }
+
+  void _clearEndBuilding() {
+    setState(() {
+      _endBuilding = null;
+    });
+  }
+
   void _clearRoute() {
     // Usamos setState para que la UI se actualice
     setState(() {
@@ -324,8 +336,9 @@ class _CampusMapScreenState extends State<CampusMapScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Campus UTFSM'),
-        backgroundColor: AppColors.darkPrimary,
+        backgroundColor: AppColors.primary,
         foregroundColor: AppColors.background,
+        centerTitle: true,
       ),
       body: Builder(
         builder: (BuildContext innerContext) {
@@ -445,46 +458,86 @@ class _CampusMapScreenState extends State<CampusMapScreen> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      // Dropdown de INICIO
-                      DropdownButtonHideUnderline(
-                        child: DropdownButton<Building>(
-                          value: _startBuilding,
-                          isExpanded: true,
-                          hint: Text("Selecciona punto de inicio..."),
-                          items: allBuildings
-                              .map(
-                                (b) => DropdownMenuItem(
-                                  value: b,
-                                  child: Text(b.name),
-                                ),
-                              )
-                              .toList(),
-                          onChanged: (val) =>
-                              setState(() => _startBuilding = val),
-                          dropdownColor: AppColors.background,
-                        ),
+                      // Dropdown de INICIO con botón de limpiar
+                      Row(
+                        children: [
+                          Expanded(
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton<Building>(
+                                value: _startBuilding,
+                                isExpanded: true,
+                                hint: Text("Selecciona punto de inicio..."),
+                                items: allBuildings
+                                    .map(
+                                      (b) => DropdownMenuItem(
+                                        value: b,
+                                        child: Text(b.name),
+                                      ),
+                                    )
+                                    .toList(),
+                                onChanged: (val) =>
+                                    setState(() => _startBuilding = val),
+                                dropdownColor: AppColors.background,
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          // Botón para limpiar INICIO
+                          if (_startBuilding != null)
+                            IconButton(
+                              icon: Icon(Icons.clear, size: 20),
+                              tooltip: 'Limpiar inicio',
+                              style: IconButton.styleFrom(
+                                backgroundColor: AppColors.lightAccent,
+                                foregroundColor: AppColors.accent,
+                                fixedSize: Size(36, 36),
+                                padding: EdgeInsets.zero,
+                              ),
+                              onPressed: _clearStartBuilding,
+                            ),
+                        ],
                       ),
 
                       Divider(height: 1, color: AppColors.textSecondary),
 
-                      // Dropdown de DESTINO
-                      DropdownButtonHideUnderline(
-                        child: DropdownButton<Building>(
-                          value: _endBuilding,
-                          isExpanded: true,
-                          hint: Text("Selecciona punto de destino..."),
-                          items: allBuildings
-                              .map(
-                                (b) => DropdownMenuItem(
-                                  value: b,
-                                  child: Text(b.name),
-                                ),
-                              )
-                              .toList(),
-                          onChanged: (val) =>
-                              setState(() => _endBuilding = val),
-                          dropdownColor: AppColors.background,
-                        ),
+                      // Dropdown de DESTINO con botón de limpiar
+                      Row(
+                        children: [
+                          Expanded(
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton<Building>(
+                                value: _endBuilding,
+                                isExpanded: true,
+                                hint: Text("Selecciona punto de destino..."),
+                                items: allBuildings
+                                    .map(
+                                      (b) => DropdownMenuItem(
+                                        value: b,
+                                        child: Text(b.name),
+                                      ),
+                                    )
+                                    .toList(),
+                                onChanged: (val) =>
+                                    setState(() => _endBuilding = val),
+                                dropdownColor: AppColors.background,
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          // Botón para limpiar DESTINO
+                          if (_endBuilding != null)
+                            IconButton(
+                              icon: Icon(Icons.clear, size: 20),
+                              tooltip: 'Limpiar destino',
+                              style: IconButton.styleFrom(
+                                backgroundColor: AppColors.lightAccent,
+                                foregroundColor: AppColors.accent,
+                                fixedSize: Size(36, 36),
+                                padding: EdgeInsets.zero,
+                              ),
+                              onPressed: _clearEndBuilding,
+                            ),
+                        ],
                       ),
 
                       SizedBox(height: 8),
@@ -510,7 +563,7 @@ class _CampusMapScreenState extends State<CampusMapScreen> {
                                     : 'Obtener Ruta',
                               ),
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.darkPrimary,
+                                backgroundColor: AppColors.primary,
                                 foregroundColor: AppColors.background,
                                 minimumSize: Size(double.infinity, 44),
                               ),
@@ -518,16 +571,16 @@ class _CampusMapScreenState extends State<CampusMapScreen> {
                             ),
                           ),
                           SizedBox(width: 10),
-                          // --- NUEVO BOTÓN DE LIMPIAR ---
+                          // --- BOTÓN DE LIMPIAR TODO ---
                           IconButton(
-                            icon: Icon(Icons.clear),
-                            tooltip: 'Limpiar selección',
+                            icon: Icon(Icons.clear_all),
+                            tooltip: 'Limpiar todo',
                             style: IconButton.styleFrom(
-                              backgroundColor: AppColors.lightPrimary,
-                              foregroundColor: AppColors.darkPrimary,
+                              backgroundColor: AppColors.lightAccent,
+                              foregroundColor: AppColors.accent,
                               fixedSize: Size(44, 44),
                             ),
-                            onPressed: _clearRoute, // Llama a la nueva función
+                            onPressed: _clearRoute,
                           ),
                         ],
                       ),
